@@ -37,5 +37,25 @@ RSpec.describe "Users", type: :request do
 
       end
     end
+
+    context 'when fetching users by username' do
+      let(:user) { company_1.users.first }
+
+      include_context 'with multiple companies'
+
+      it 'returns only the users for the specified username' do
+        get company_users_path(company_1, username: user.username)
+
+        expect(result.size).to eq(1)
+        expect(result.first['id']).to eq(user.id)
+      end
+
+      it 'returns only the users for the parcial username' do
+        get company_users_path(company_1, username: user.username[2..4])
+
+        expect(result.size).to eq(1)
+        expect(result.first['id']).to eq(user.id)
+      end
+    end
   end
 end
